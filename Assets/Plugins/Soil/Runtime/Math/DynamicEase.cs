@@ -9,11 +9,11 @@ namespace Soil {
 public struct DynamicEase {
     // -- cfg --
     [Header("cfg")]
-    [Tooltip("the ease configuration")]
+    [Tooltip("the ease config")]
     [SerializeField] Config m_Config;
 
     #pragma warning disable CS0414
-    [Tooltip("the configuration source")]
+    [Tooltip("the config source")]
     [SerializeField] ConfigSource m_ConfigSource;
     #pragma warning restore CS0414
 
