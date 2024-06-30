@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Soil {
 
@@ -54,6 +55,11 @@ public struct FloatRange {
     public bool Contains(float value) {
         return (value >= Min && value < Max)
             || (value >= Max && value < Min);
+    }
+
+    /// sample a random value
+    public float Sample() {
+        return Evaluate(Random.value);
     }
 
     // -- operators --
