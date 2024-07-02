@@ -44,8 +44,8 @@ MonoBehaviour:
       Min: 10
       Max: 10
   Move_Rotation_Duration:
-    Min: 0.5
-    Max: 2
+    Min: 1
+    Max: 4
   Move_Rotation_Curve:
     serializedVersion: 2
     m_Curve:

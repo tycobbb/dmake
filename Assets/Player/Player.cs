@@ -10,6 +10,11 @@ sealed class Player: MonoBehaviour {
     [Tooltip("the tuning")]
     [SerializeField] PlayerTuning m_Tuning;
 
+    // -- refs --
+    [Header("refs")]
+    [Tooltip("the character controller")]
+    [SerializeField] CharacterController m_Controller;
+
     // -- props --
     /// the current timer for the move action
     EaseTimer m_Move;
@@ -30,6 +35,9 @@ sealed class Player: MonoBehaviour {
     void Start() {
         m_Move = new EaseTimer();
         m_Move_Rotation = new EaseTimer(new(0f, m_Tuning.Move_Rotation_Curve));
+
+        // apply the controller's position offset
+        transform.position += m_Controller.skinWidth * Vector3.up;
     }
 
     void Update() {
@@ -55,11 +63,10 @@ sealed class Player: MonoBehaviour {
 
         if (m_Move.TryTick()) {
             var moveSpeed = m_Tuning.Move_Speed.Evaluate(m_Move.Pct);
-            trs.position += moveSpeed * delta * trs.forward;
+            m_Controller.Move(moveSpeed * delta * trs.forward);
         }
 
         if (m_Move_Rotation.TryTick()) {
-            var rotationTimer = m_Move_Rotation;
             trs.rotation = Quaternion.Slerp(
                 m_Move_Rotation_From,
                 m_Move_Rotation_To,
