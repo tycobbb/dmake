@@ -20,19 +20,19 @@ public struct AdsrCurve {
     [SerializeField] float m_AttackValue;
 
     [Tooltip("the attack curve")]
-    [SerializeField] MapInCurve m_Attack;
+    [SerializeField] MapInMaxCurve m_Attack;
 
     [Tooltip("the hold duration between attack & decay")]
     [SerializeField] float m_HoldDuration;
 
     [Tooltip("the decay curve after attack curve towards sustain")]
-    [SerializeField] MapInCurve m_Decay;
+    [SerializeField] MapInMaxCurve m_Decay;
 
     [Tooltip("the sustained value after decay")]
     [SerializeField] float m_SustainValue;
 
     [Tooltip("the release curve towards zero")]
-    [SerializeField] MapInCurve m_Release;
+    [SerializeField] MapInMaxCurve m_Release;
 
     // -- queries --
     /// evaluate the curve in the range
@@ -57,7 +57,7 @@ public struct AdsrCurve {
         elapsed -= m_Delay;
 
         // if we're in attack, attack towards the attack value
-        if (elapsed > 0f && elapsed <= m_Attack.Src.Max) {
+        if (elapsed > 0f && elapsed <= m_Attack.Max) {
             value = Mathf.Lerp(
                 m_InitialValue,
                 m_AttackValue,
@@ -66,7 +66,7 @@ public struct AdsrCurve {
         }
 
         // move past attack
-        elapsed -= m_Attack.Src.Max;
+        elapsed -= m_Attack.Max;
 
          // if we're in hold, hold the attack value
         if (elapsed > 0f && elapsed <= m_HoldDuration) {
@@ -77,7 +77,7 @@ public struct AdsrCurve {
         elapsed -= m_HoldDuration;
 
         // if we're in decay, decay towards the sustain value
-        if (elapsed > 0f && elapsed <= m_Decay.Src.Max) {
+        if (elapsed > 0f && elapsed <= m_Decay.Max) {
             value = Mathf.Lerp(
                 m_AttackValue,
                 m_SustainValue,
@@ -95,6 +95,11 @@ public struct AdsrCurve {
         }
 
         return value;
+    }
+
+    /// the duration of the dahd curve
+    public float Duration {
+        get => m_Delay + m_Attack.Max + m_HoldDuration + m_Decay.Max;
     }
 }
 

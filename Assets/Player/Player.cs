@@ -38,7 +38,6 @@ sealed class Player: MonoBehaviour {
             var nextForward = Random.insideUnitCircle.normalized.XZ();
 
             // start move
-            m_Move_Forward = nextForward;
             m_Move.Duration = m_Tuning.Move_Duration.Sample();
             m_Move.Start();
 
@@ -56,10 +55,11 @@ sealed class Player: MonoBehaviour {
 
         if (m_Move.TryTick()) {
             var moveSpeed = m_Tuning.Move_Speed.Evaluate(m_Move.Pct);
-            trs.position += moveSpeed * delta * m_Move_Forward;
+            trs.position += moveSpeed * delta * trs.forward;
         }
 
         if (m_Move_Rotation.TryTick()) {
+            var rotationTimer = m_Move_Rotation;
             trs.rotation = Quaternion.Slerp(
                 m_Move_Rotation_From,
                 m_Move_Rotation_To,

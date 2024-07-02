@@ -18,13 +18,7 @@ public struct MapInCurve: FloatTransform {
 
     // -- FloatTransform --
     public float Evaluate(float input) {
-        var k = Src.InverseLerp(input);
-
-        if (Curve != null && Curve.length != 0) {
-            k = Curve.Evaluate(k);
-        }
-
-        return k;
+        return MapCurve.Evaluate(Curve, Src, input);
     }
 
     // -- debug --

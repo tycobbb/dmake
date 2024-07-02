@@ -67,8 +67,11 @@ public sealed class MapCurveDrawer: PropertyDrawer {
         SerializedProperty dstMax,
         SerializedProperty curve
     ) {
+        // draw the curve
+        DrawCurveField(ref r, curve);
+
         // calculate the range width
-        var rw = (r.width - k_CurveWidth - Theme.Gap3 * 2) / 2;
+        var rw = (r.width - Theme.Gap3) / 2;
 
         // draw the src range
         var rr1 = r;
@@ -78,20 +81,29 @@ public sealed class MapCurveDrawer: PropertyDrawer {
         // move past the range
         r.x += rr1.width + Theme.Gap3;
 
-        // draw the curve
+        // draw the dst range
+        var rr2 = r;
+        rr2.width = rw;
+        FloatRangeDrawer.DrawInput(rr2, dstMin, dstMax);
+    }
+
+    /// draw a a curve and advance the rect past the curve
+    public static void DrawCurveField(
+        ref Rect r,
+        SerializedProperty curve
+    ) {
         var rc = r;
+
+        // draw the curve
         rc.width = k_CurveWidth;
         rc.y -= 1;
         rc.height += 1;
         curve.animationCurveValue = E.CurveField(rc, curve.animationCurveValue);
 
         // move past the curve
-        r.x += rc.width + Theme.Gap3;
-
-        // draw the dst range
-        var rr2 = r;
-        rr2.width = rw;
-        FloatRangeDrawer.DrawInput(rr2, dstMin, dstMax);
+        var delta = rc.width + Theme.Gap3;
+        r.x += delta;
+        r.width -= delta;
     }
 }
 

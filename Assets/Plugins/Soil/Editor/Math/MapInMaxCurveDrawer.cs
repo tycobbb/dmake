@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 
 using E = UnityEditor.EditorGUI;
@@ -6,8 +6,8 @@ using U = UnityEditor.EditorGUIUtility;
 
 namespace Soil.Editor {
 
-[CustomPropertyDrawer(typeof(MapInCurve))]
-sealed class MapInCurveDrawer: PropertyDrawer {
+[CustomPropertyDrawer(typeof(MapInMaxCurve))]
+sealed class MapInMaxCurveDrawer: PropertyDrawer {
     // -- commands --
     public override void OnGUI(Rect r, SerializedProperty prop, GUIContent label) {
         E.BeginProperty(r, label, prop);
@@ -38,29 +38,17 @@ sealed class MapInCurveDrawer: PropertyDrawer {
     }
 
     // -- commands --
-    /// draw the input for a map in curve
+    /// draw the input for a map in max curve
     public static void DrawInput(
         Rect r,
-        SerializedProperty src,
-        SerializedProperty curve
-    ) {
-        var srcMin = src.FindProp(nameof(FloatRange.Min));
-        var srcMax = src.FindProp(nameof(FloatRange.Max));
-        DrawInput(r, srcMin, srcMax, curve);
-    }
-
-    /// draw the input for a map in curve
-    public static void DrawInput(
-        Rect r,
-        SerializedProperty srcMin,
         SerializedProperty srcMax,
         SerializedProperty curve
     ) {
-        // draw curve
+        // draw the curve
         MapCurveDrawer.DrawCurveField(ref r, curve);
 
-        // draw the range
-        FloatRangeDrawer.DrawInput(r, srcMin, srcMax);
+        // draw the max input
+        srcMax.floatValue = E.FloatField(r, srcMax.floatValue);
     }
 }
 

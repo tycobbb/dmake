@@ -18,22 +18,7 @@ public struct MapOutCurve: FloatTransform {
 
     // -- FloatTransform --
     public float Evaluate(float input) {
-        return Evaluate(Curve, Dst, input);
-    }
-
-    // -- queries --
-    /// evaluate the curve in the range
-    public static float Evaluate(
-        AnimationCurve curve,
-        FloatRange range,
-        float input
-    ) {
-        var k = input;
-        if (curve != null && curve.length != 0) {
-            k = curve.Evaluate(input);
-        }
-
-        return range.Lerp(k);
+        return MapCurve.Evaluate(Curve, Dst, input);
     }
 
     // -- debug --

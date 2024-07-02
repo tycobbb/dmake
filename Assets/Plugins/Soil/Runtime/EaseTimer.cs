@@ -130,6 +130,11 @@ public record EaseTimer {
         get => m_RawPct;
     }
 
+    /// the elapsed time
+    public float Elapsed {
+        get => m_Elapsed;
+    }
+
     /// the total duration
     public float Duration {
         get => m_Config.Duration;

@@ -8,10 +8,6 @@ namespace Soil.Editor {
 
 [CustomPropertyDrawer(typeof(MapOutCurve))]
 public sealed class MapOutCurveDrawer: PropertyDrawer {
-    // -- constants --
-    /// the width of the curve
-    const float k_CurveWidth = 40f;
-
     // -- commands --
     public override void OnGUI(Rect r, SerializedProperty prop, GUIContent label) {
         E.BeginProperty(r, label, prop);
@@ -61,16 +57,9 @@ public sealed class MapOutCurveDrawer: PropertyDrawer {
         SerializedProperty curve
     ) {
         // draw the curve
-        var rc = r;
-        rc.width = k_CurveWidth;
-        rc.y -= 1;
-        rc.height += 1;
-        curve.animationCurveValue = E.CurveField(rc, curve.animationCurveValue);
+        MapCurveDrawer.DrawCurveField(ref r, curve);
 
         // draw the range
-        var delta = rc.width + Theme.Gap3;
-        r.x += delta;
-        r.width -= delta;
         FloatRangeDrawer.DrawInput(r, dstMin, dstMax);
     }
 }
