@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: PlayerTuning
   m_EditorClassIdentifier: 
   Move_Duration:
-    Min: 1
-    Max: 5
+    Min: 10
+    Max: 30
   Move_Speed:
     Curve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 34
@@ -29,22 +29,31 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0.33333334
       - serializedVersion: 3
+        time: 0.9
+        value: 1
+        inSlope: -0
+        outSlope: -0.007042611
+        tangentMode: 5
+        weightedMode: 2
+        inWeight: 0.33333334
+        outWeight: 0.9280575
+      - serializedVersion: 3
         time: 1
         value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0.33333334
+        inSlope: -0.021376392
+        outSlope: -0.021376392
+        tangentMode: 0
+        weightedMode: 1
+        inWeight: 0.30575547
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     Dst:
-      Min: 4
-      Max: 4
+      Min: 0
+      Max: 1
   Move_Rotation_Duration:
-    Min: 1
+    Min: 3
     Max: 4
   Move_Rotation_Curve:
     serializedVersion: 2
@@ -71,27 +80,27 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   Move_Reflect:
-    Duration: 1
+    Duration: 2
     Curve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
         value: 0
-        inSlope: 0
-        outSlope: 0
+        inSlope: 0.0049917405
+        outSlope: 0.0049917405
         tangentMode: 0
-        weightedMode: 0
+        weightedMode: 2
         inWeight: 0
-        outWeight: 0
+        outWeight: 0.2618705
       - serializedVersion: 3
         time: 1
         value: 1
-        inSlope: 0
-        outSlope: 0
+        inSlope: -0.0029665197
+        outSlope: -0.0029665197
         tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
+        weightedMode: 1
+        inWeight: 0.88129497
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
