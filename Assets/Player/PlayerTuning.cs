@@ -17,4 +17,7 @@ sealed class PlayerTuning: ScriptableObject {
 
     [Tooltip("the move rotation timer curve")]
     public AnimationCurve Move_Rotation_Curve;
+
+    [Tooltip("the reflect timer")]
+    public EaseTimer.Config Move_Reflect;
 }

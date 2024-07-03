@@ -26,28 +26,40 @@ sealed class Player: MonoBehaviour {
     EaseTimer m_Move_Rotation;
 
     /// the initial rotation when the move began
-    Quaternion m_Move_Rotation_From;
+    Quaternion m_Move_Rotation_Src;
 
     /// the final rotation of the move
-    Quaternion m_Move_Rotation_To;
+    Quaternion m_Move_Rotation_Dst;
 
     /// the current rotation of the move
     Quaternion m_Move_Rotation_Curr;
 
-    /// the rotation reflection from hitting a wall
-    Quaternion m_Move_Rotation_Reflect;
+    /// the current timer for the reflection
+    EaseTimer m_Move_Reflect;
 
-    /// the current timer for the move rotation
-    Vector3 m_Move_Rotation_InitialForward;
+    /// the initial rotation when the reflection began
+    Quaternion m_Move_Reflect_Src;
+
+    /// the final rotation of the reflection
+    Quaternion m_Move_Reflect_Dst;
+
+    /// the current rotation of the reflection
+    Quaternion m_Move_Reflect_Curr;
+
+    /// the initial forward direction
+    Vector3 m_InitialForward;
 
     // -- lifecycle --
     void Start() {
         m_Move = new EaseTimer();
-        m_Move_Rotation = new EaseTimer(new(0f, m_Tuning.Move_Rotation_Curve));
 
+        m_Move_Rotation = new EaseTimer(new(0f, m_Tuning.Move_Rotation_Curve));
         m_Move_Rotation_Curr = Quaternion.identity;
-        m_Move_Rotation_Reflect = Quaternion.identity;
-        m_Move_Rotation_InitialForward = transform.forward;
+
+        m_Move_Reflect = new EaseTimer(m_Tuning.Move_Reflect);
+        m_Move_Reflect_Curr = Quaternion.identity;
+
+        m_InitialForward = transform.forward;
     }
 
     void Update() {
@@ -57,11 +69,14 @@ sealed class Player: MonoBehaviour {
             m_Move.Duration = m_Tuning.Move_Duration.Sample();
             m_Move.Start();
 
-            // start move rotation
+            // accumulate the move rotation
+            var currRotation = m_Move_Rotation_Curr;
             var nextForward = Random.insideUnitCircle.normalized.XZ();
-            m_Move_Rotation_From = m_Move_Rotation_Curr;
-            m_Move_Rotation_To = m_Move_Rotation_From * Quaternion.LookRotation(nextForward, Vector3.up);
+            var nextRotation = currRotation * Quaternion.LookRotation(nextForward, Vector3.up);
 
+            // start the move rotation
+            m_Move_Rotation_Src = currRotation;
+            m_Move_Rotation_Dst = nextRotation;
             m_Move_Rotation.Duration = m_Tuning.Move_Rotation_Duration.Sample();
             m_Move_Rotation.Start();
         }
@@ -70,11 +85,12 @@ sealed class Player: MonoBehaviour {
     void FixedUpdate() {
         var delta = Time.deltaTime;
 
-        // while active, move pos
+        // while active, move pos (towards reflection destination)
         if (m_Move.TryTick()) {
             var currPos = m_Body.position;
+            var currFwd = m_Move_Rotation_Curr * m_Move_Reflect_Dst * m_InitialForward;
             var moveLen = m_Tuning.Move_Speed.Evaluate(m_Move.Pct) * delta;
-            var nextPos = currPos + moveLen * transform.forward;
+            var nextPos = currPos + moveLen * currFwd;
 
             m_Body.MovePosition(nextPos);
         }
@@ -82,18 +98,29 @@ sealed class Player: MonoBehaviour {
         // while active, rotate along move curve
         if (m_Move_Rotation.TryTick()) {
             var nextMoveRot = Quaternion.Slerp(
-                m_Move_Rotation_From,
-                m_Move_Rotation_To,
+                m_Move_Rotation_Src,
+                m_Move_Rotation_Dst,
                 m_Move_Rotation.Pct
             );
 
             m_Move_Rotation_Curr = nextMoveRot;
         }
 
-        // always set current rotation
+        // while active, reflect off of collision
+        if (m_Move_Reflect.TryTick()) {
+            var nextReflectRot = Quaternion.Slerp(
+                m_Move_Reflect_Src,
+                m_Move_Reflect_Dst,
+                m_Move_Reflect.Pct
+            );
+
+            m_Move_Reflect_Curr = nextReflectRot;
+        }
+
+        // rotate to interpolated rotation
         var nextRot = (
             m_Move_Rotation_Curr *
-            m_Move_Rotation_Reflect
+            m_Move_Reflect_Curr
         );
 
         m_Body.MoveRotation(nextRot);
@@ -106,17 +133,22 @@ sealed class Player: MonoBehaviour {
 
         // get current forward based on accumulated rotation (relevant if multiple
         // collisions in a single frame?)
-        var currRotation = m_Move_Rotation_Reflect * m_Move_Rotation_Curr;
-        var currFwd = currRotation * m_Move_Rotation_InitialForward;
+        var currRotation = m_Move_Reflect_Curr * m_Move_Rotation_Curr;
+        var currFwd = currRotation * m_InitialForward;
 
-        // reflect direction over the normal (bounce)
+        // reflect over the normal (bounce)
         var dirNormal = contact.normal;
         var dirCross = Vector3.ProjectOnPlane(currFwd, dirNormal);
         var dirInline = currFwd - dirCross;
         var dirReflect = dirCross - dirInline;
 
         // accumulate the reflection
-        var rotation = Quaternion.FromToRotation(currFwd, dirReflect);
-        m_Move_Rotation_Reflect *= rotation;
+        var currReflect = m_Move_Reflect_Curr;
+        var nextReflect = currReflect * Quaternion.FromToRotation(currFwd, dirReflect);
+
+        // start the reflection
+        m_Move_Reflect_Src = currReflect;
+        m_Move_Reflect_Dst = nextReflect;
+        m_Move_Reflect.Start();
     }
 }
