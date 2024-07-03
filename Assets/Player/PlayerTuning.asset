@@ -41,8 +41,8 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     Dst:
-      Min: 10
-      Max: 10
+      Min: 4
+      Max: 4
   Move_Rotation_Duration:
     Min: 1
     Max: 4

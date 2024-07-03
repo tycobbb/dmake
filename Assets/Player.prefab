@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 913428293713062614}
   - component: {fileID: 2899535751042594543}
-  - component: {fileID: 2133629698638577308}
+  - component: {fileID: 2269221215444022345}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -48,25 +48,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Tuning: {fileID: 11400000, guid: 8cbab675260e84ffbbdd9f2289c1c8fe, type: 2}
-  m_Controller: {fileID: 2133629698638577308}
---- !u!143 &2133629698638577308
-CharacterController:
+  m_Body: {fileID: 2269221215444022345}
+--- !u!54 &2269221215444022345
+Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 913428293713062569}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
   serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &913428294515705565
 GameObject:
   m_ObjectHideFlags: 0
