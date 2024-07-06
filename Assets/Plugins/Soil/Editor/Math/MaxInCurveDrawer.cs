@@ -6,8 +6,8 @@ using U = UnityEditor.EditorGUIUtility;
 
 namespace Soil.Editor {
 
-[CustomPropertyDrawer(typeof(MapInMaxCurve))]
-sealed class MapInMaxCurveDrawer: PropertyDrawer {
+[CustomPropertyDrawer(typeof(MaxInCurve))]
+sealed class MaxInCurveDrawer: PropertyDrawer {
     // -- commands --
     public override void OnGUI(Rect r, SerializedProperty prop, GUIContent label) {
         E.BeginProperty(r, label, prop);
@@ -29,7 +29,8 @@ sealed class MapInMaxCurveDrawer: PropertyDrawer {
         r.width -= lw;
 
         // draw the input
-        DrawInput(r, src, curve);
+        var srcUnits = src.FindAttribute<UnitsAttribute>();
+        DrawInput(r, src, srcUnits, curve);
 
         // reset indent level
         E.indentLevel = indent;
@@ -42,13 +43,14 @@ sealed class MapInMaxCurveDrawer: PropertyDrawer {
     public static void DrawInput(
         Rect r,
         SerializedProperty srcMax,
+        UnitsAttribute srcUnits,
         SerializedProperty curve
     ) {
         // draw the curve
         MapCurveDrawer.DrawCurveField(ref r, curve);
 
         // draw the max input
-        srcMax.floatValue = E.FloatField(r, srcMax.floatValue);
+        FloatRangeDrawer.DrawInput(r, null, max: srcMax, srcUnits);
     }
 }
 

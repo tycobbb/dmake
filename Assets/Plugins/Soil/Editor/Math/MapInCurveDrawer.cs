@@ -29,7 +29,8 @@ sealed class MapInCurveDrawer: PropertyDrawer {
         r.width -= lw;
 
         // draw the input
-        DrawInput(r, src, curve);
+        var srcUnits = src.FindAttribute<UnitsAttribute>();
+        DrawInput(r, src, srcUnits, curve);
 
         // reset indent level
         E.indentLevel = indent;
@@ -42,11 +43,12 @@ sealed class MapInCurveDrawer: PropertyDrawer {
     public static void DrawInput(
         Rect r,
         SerializedProperty src,
+        UnitsAttribute srcUnits,
         SerializedProperty curve
     ) {
         var srcMin = src.FindProp(nameof(FloatRange.Min));
         var srcMax = src.FindProp(nameof(FloatRange.Max));
-        DrawInput(r, srcMin, srcMax, curve);
+        DrawInput(r, srcMin, srcMax, srcUnits, curve);
     }
 
     /// draw the input for a map in curve
@@ -54,13 +56,14 @@ sealed class MapInCurveDrawer: PropertyDrawer {
         Rect r,
         SerializedProperty srcMin,
         SerializedProperty srcMax,
+        UnitsAttribute srcUnits,
         SerializedProperty curve
     ) {
         // draw curve
         MapCurveDrawer.DrawCurveField(ref r, curve);
 
         // draw the range
-        FloatRangeDrawer.DrawInput(r, srcMin, srcMax);
+        FloatRangeDrawer.DrawInput(r, srcMin, srcMax, srcUnits);
     }
 }
 

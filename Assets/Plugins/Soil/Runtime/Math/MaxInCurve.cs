@@ -6,7 +6,8 @@ namespace Soil {
 
 /// a normalized curve with a max value
 [Serializable]
-public struct MapInMaxCurve: FloatTransform {
+[UnityEngine.Scripting.APIUpdating.MovedFrom(true, "Soil", "Soil", "MapInMaxCurve")]
+public struct MaxInCurve: FloatTransform {
     // -- fields --
     [Tooltip("the curve")]
     public AnimationCurve Curve;

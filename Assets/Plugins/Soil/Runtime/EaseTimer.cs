@@ -177,6 +177,7 @@ public record EaseTimer {
     [Serializable]
     public struct Config {
         // -- cfg --
+        [Units("s")]
         [Tooltip("the timer duration")]
         public float Duration;
 

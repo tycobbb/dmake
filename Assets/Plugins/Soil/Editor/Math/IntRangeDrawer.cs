@@ -44,8 +44,8 @@ public sealed class IntRangeDrawer: PropertyDrawer {
     // -- commands --
     /// draw the range input
     public static void DrawInput(Rect r, SerializedProperty prop) {
-        var min = prop.FindPropertyRelative("Min");
-        var max = prop.FindPropertyRelative("Max");
+        var min = prop.FindProp(nameof(IntRange.Min));
+        var max = prop.FindProp(nameof(IntRange.Max));
 
         // find the range attribute
         var objType = prop.serializedObject.targetObject.GetType();

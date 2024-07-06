@@ -7,12 +7,8 @@ using U = UnityEditor.EditorGUIUtility;
 namespace Soil.Editor {
 
 // TODO: show the current time when the game is playing
-[CustomPropertyDrawer(typeof(EaseTimer))]
+[CustomPropertyDrawer(typeof(EaseTimer.Config))]
 sealed class EaseTimerConfigDrawer: PropertyDrawer {
-    // -- constants --
-    /// the width of the curve
-    const float k_CurveWidth = 40f;
-
     // -- PropertyDrawer --
     public override void OnGUI(Rect r, SerializedProperty prop, GUIContent label) {
         E.BeginProperty(r, label, prop);
@@ -42,23 +38,15 @@ sealed class EaseTimerConfigDrawer: PropertyDrawer {
     /// draw the config fields
     public static void DrawConfig(Rect r, SerializedProperty prop) {
         // get attrs
-        var value = prop.FindPropertyRelative(nameof(EaseTimer.Config.Duration));
-        var curve = prop.FindPropertyRelative(nameof(EaseTimer.Config.Curve));
+        var value = prop.FindProp(nameof(EaseTimer.Config.Duration));
+        var curve = prop.FindProp(nameof(EaseTimer.Config.Curve));
 
         // draw the curve
-        var rc = r;
-        rc.width = k_CurveWidth;
-        rc.y -= 1;
-        rc.height += 1;
-        curve.animationCurveValue = E.CurveField(rc, curve.animationCurveValue);
-
-        // move past the curve
-        var delta = rc.width + Theme.Gap3;
-        r.x += delta;
-        r.width -= delta;
+        MapCurveDrawer.DrawCurveField(ref r, curve);
 
         // draw the duration
-        value.floatValue = E.FloatField(r, value.floatValue);
+        var units = value.FindAttribute<UnitsAttribute>();
+        FloatRangeDrawer.DrawInput(r, null, max: value, units);
     }
 }
 

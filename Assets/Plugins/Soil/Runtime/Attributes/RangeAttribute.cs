@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Soil {
 
-/// a custom range attribute that doesn't complain about data type
+/// marks a field as a range (and doesn't complain about data type)
 [AttributeUsage(AttributeTargets.Field)]
 public sealed class RangeAttribute: PropertyAttribute {
     // -- props --

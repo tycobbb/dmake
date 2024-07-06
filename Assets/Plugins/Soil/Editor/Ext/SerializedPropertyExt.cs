@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 
 namespace Soil.Editor {
@@ -46,6 +48,51 @@ public static class SerializedPropertyExt {
 
         value = inner;
         return true;
+    }
+
+    /// find the field attribute, if any
+    public static T FindAttribute<T>(
+        this SerializedProperty prop
+    ) where T: Attribute {
+        return prop.FindFieldInfo().GetCustomAttribute<T>();
+    }
+
+    /// find the field attributes, if any
+    public static IEnumerable<T> FindAttributes<T>(
+        this SerializedProperty prop
+    ) where T: Attribute {
+        return prop.FindFieldInfo().GetCustomAttributes<T>();
+    }
+
+    /// find the field info for the property
+    public static FieldInfo FindFieldInfo(this SerializedProperty prop) {
+        var fieldInfo = null as FieldInfo;
+
+        // given the path to the field
+        var path = prop.propertyPath;
+        var pathLen = path.Length;
+
+        // given the current position in the path / tree
+        var currIndex = 0;
+        var currType = prop.serializedObject.targetObject.GetType();
+
+        // pick nested fields until we consume the entire path
+        while (currIndex < pathLen) {
+            var nextIndex = path.IndexOf('.', currIndex);
+            if (nextIndex == -1) {
+                nextIndex = pathLen;
+            }
+
+            var name = path.Substring(currIndex, nextIndex - currIndex);
+            var nextField = currType.GetField(name);
+
+            currIndex = nextIndex + 1;
+            currType = nextField.FieldType;
+
+            fieldInfo = nextField;
+        }
+
+        return fieldInfo;
     }
 }
 

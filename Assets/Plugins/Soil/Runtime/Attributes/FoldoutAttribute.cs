@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Soil {
 
-/// a custom foldout attribute that doesn't complain about data type
+/// marks a field as the beginning of a foldout
 [AttributeUsage(AttributeTargets.Field)]
 public sealed class FoldoutAttribute: PropertyAttribute {
     // -- props --

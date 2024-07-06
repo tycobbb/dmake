@@ -35,7 +35,8 @@ public sealed class MapCurveDrawer: PropertyDrawer {
         r.width -= lw;
 
         // draw the input
-        DrawInput(r, src, dst, curve);
+        var (srcUnits, dstUnits) = FindUnits(prop);
+        DrawInput(r, src, srcUnits, dst, dstUnits, curve);
 
         // reset indent level
         E.indentLevel = indent;
@@ -48,14 +49,18 @@ public sealed class MapCurveDrawer: PropertyDrawer {
     public static void DrawInput(
         Rect r,
         SerializedProperty src,
+        UnitsAttribute srcUnits,
         SerializedProperty dst,
+        UnitsAttribute dstUnits,
         SerializedProperty curve
     ) {
         var srcMin = src.FindProp(nameof(FloatRange.Min));
         var srcMax = src.FindProp(nameof(FloatRange.Max));
+
         var dstMin = dst.FindProp(nameof(FloatRange.Min));
         var dstMax = dst.FindProp(nameof(FloatRange.Max));
-        DrawInput(r, srcMin, srcMax, dstMin, dstMax, curve);
+
+        DrawInput(r, srcMin, srcMax, srcUnits, dstMin, dstMax, dstUnits, curve);
     }
 
     /// draw the input for a map curve
@@ -63,8 +68,10 @@ public sealed class MapCurveDrawer: PropertyDrawer {
         Rect r,
         SerializedProperty srcMin,
         SerializedProperty srcMax,
+        UnitsAttribute srcUnits,
         SerializedProperty dstMin,
         SerializedProperty dstMax,
+        UnitsAttribute dstUnits,
         SerializedProperty curve
     ) {
         // draw the curve
@@ -76,7 +83,7 @@ public sealed class MapCurveDrawer: PropertyDrawer {
         // draw the src range
         var rr1 = r;
         rr1.width = rw;
-        FloatRangeDrawer.DrawInput(rr1, srcMin, srcMax);
+        FloatRangeDrawer.DrawInput(rr1, srcMin, srcMax, srcUnits);
 
         // move past the range
         r.x += rr1.width + Theme.Gap3;
@@ -84,7 +91,7 @@ public sealed class MapCurveDrawer: PropertyDrawer {
         // draw the dst range
         var rr2 = r;
         rr2.width = rw;
-        FloatRangeDrawer.DrawInput(rr2, dstMin, dstMax);
+        FloatRangeDrawer.DrawInput(rr2, dstMin, dstMax, dstUnits);
     }
 
     /// draw a a curve and advance the rect past the curve
@@ -104,6 +111,26 @@ public sealed class MapCurveDrawer: PropertyDrawer {
         var delta = rc.width + Theme.Gap3;
         r.x += delta;
         r.width -= delta;
+    }
+
+    // -- queries --
+    /// find the src & dst units attached to a given property
+    public static (UnitsAttribute, UnitsAttribute) FindUnits(SerializedProperty prop) {
+        var srcUnits = null as UnitsAttribute;
+        var dstUnits = null as UnitsAttribute;
+
+        var unitsList = prop.FindAttributes<UnitsAttribute>();
+        foreach (var units in unitsList) {
+            if (units.For.HasFlag(UnitsFor.Src)) {
+                srcUnits = units;
+            }
+
+            if (units.For.HasFlag(UnitsFor.Dst)) {
+                dstUnits = units;
+            }
+        }
+
+        return (srcUnits, dstUnits);
     }
 }
 
