@@ -47,10 +47,10 @@ sealed class MaxInCurveDrawer: PropertyDrawer {
         SerializedProperty curve
     ) {
         // draw the curve
-        MapCurveDrawer.DrawCurveField(ref r, curve);
+        Draw.CurveField(ref r, curve);
 
         // draw the max input
-        FloatRangeDrawer.DrawInput(r, null, max: srcMax, srcUnits);
+        Draw.FloatRangeField(r, null, max: srcMax, srcUnits);
     }
 }
 

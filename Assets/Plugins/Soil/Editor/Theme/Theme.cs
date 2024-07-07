@@ -3,7 +3,7 @@ using EU = UnityEditor.EditorGUIUtility;
 
 namespace Soil.Editor {
 
-static class Theme {
+static partial class Theme {
     // -- constants --
     /// a gap between elements (2px); the spacing between the prefix label and field for unity built-ins
     public const float Gap1 = 2f;

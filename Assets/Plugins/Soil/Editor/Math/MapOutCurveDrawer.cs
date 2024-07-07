@@ -60,10 +60,10 @@ public sealed class MapOutCurveDrawer: PropertyDrawer {
         SerializedProperty curve
     ) {
         // draw the curve
-        MapCurveDrawer.DrawCurveField(ref r, curve);
+        Draw.CurveField(ref r, curve);
 
         // draw the range
-        FloatRangeDrawer.DrawInput(r, dstMin, dstMax, dstUnits);
+        Draw.FloatRangeField(r, dstMin, dstMax, dstUnits);
     }
 }
 

@@ -26,7 +26,7 @@ sealed class EaseTimerConfigDrawer: PropertyDrawer {
         r.width -= lw;
 
         // draw the config
-        DrawConfig(r, prop);
+        DrawInput(r, prop);
 
         // reset indent level
         E.indentLevel = indent;
@@ -36,17 +36,17 @@ sealed class EaseTimerConfigDrawer: PropertyDrawer {
 
     // -- commands --
     /// draw the config fields
-    public static void DrawConfig(Rect r, SerializedProperty prop) {
+    public static void DrawInput(Rect r, SerializedProperty prop) {
         // get attrs
         var value = prop.FindProp(nameof(EaseTimer.Config.Duration));
         var curve = prop.FindProp(nameof(EaseTimer.Config.Curve));
 
         // draw the curve
-        MapCurveDrawer.DrawCurveField(ref r, curve);
+        Draw.CurveField(ref r, curve);
 
         // draw the duration
         var units = value.FindAttribute<UnitsAttribute>();
-        FloatRangeDrawer.DrawInput(r, null, max: value, units);
+        Draw.FloatRangeField(r, null, max: value, units);
     }
 }
 

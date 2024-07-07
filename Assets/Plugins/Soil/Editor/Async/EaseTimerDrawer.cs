@@ -34,7 +34,7 @@ sealed class EaseTimerDrawer: PropertyDrawer {
 
         // draw config fields (disabled if external)
         E.BeginDisabledGroup(configSource.intValue == (int)EaseTimer.ConfigSource.External);
-        EaseTimerConfigDrawer.DrawConfig(r, config);
+        EaseTimerConfigDrawer.DrawInput(r, config);
         E.EndDisabledGroup();
 
         // reset indent level
